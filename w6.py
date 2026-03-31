@@ -28,9 +28,6 @@ y_pred = model.predict(x_test)
 # Accuracy
 print("Accuracy:", accuracy_score(y_test, y_pred))
 
-# Predict new data
-test = pd.DataFrame([[1600,3,7]], columns=['Area','Bedrooms','Age'])
-prediction = model.predict(test)
 
 print("Prediction (0=No, 1=Yes):", prediction[0])
 
