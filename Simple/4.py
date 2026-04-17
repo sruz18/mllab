@@ -1,27 +1,26 @@
-import numpy as np
-from sklearn.tree import DecisionTreeRegressor, plot_tree
 import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-# Dataset (Hours vs Marks)
-X = np.array([[1], [2], [3], [4], [5]])
-Y = np.array([10, 20, 30, 40, 50])
+# Load data
+X, y = load_iris(return_X_y=True)
 
-# Model with parameters
-model = DecisionTreeRegressor(
-    max_depth=3,
-    min_samples_split=2,
-    min_samples_leaf=1,
-    random_state=42
-)
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-# Train
-model.fit(X, Y)
+# Train model
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
 
-# Predict
-pred = model.predict([[3]])
-print("Prediction for 3 hours:", pred[0])
+# Tune model
+grid = GridSearchCV(model, {'max_depth': [3, 5]}, cv=3)
+grid.fit(X_train, y_train)
+
+# Print results
+print("Accuracy:", grid.score(X_test, y_test))
+print("Best Params:", grid.best_params_)
 
 # Plot tree
-plt.figure(figsize=(10,6))
-plot_tree(model, feature_names=["Hours"], filled=True)
+plot_tree(grid.best_estimator_, max_depth=2, filled=True)
 plt.show()
